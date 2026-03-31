@@ -261,7 +261,7 @@ function SendTab() {
 
       let paymentId = 0n;
       for (const log of receipt.logs) {
-        try { const d = decodeEventLog({ abi: routerV2Abi, data: log.data, topics: log.topics as [signature: `0x${string}`, ...args: `0x${string}`[]] }); if (d.eventName === "PaymentCreated") { paymentId = (d.args as { paymentId: bigint }).paymentId; break; } } catch { /* expected */ }
+        try { const d = decodeEventLog({ abi: routerV2Abi, data: log.data, topics: log.topics as [signature: `0x${string}`, ...args: `0x${string}`[]] }); if (d.eventName === "PaymentCreated") { paymentId = (d.args as unknown as { paymentId: bigint }).paymentId; break; } } catch { /* expected */ }
       }
 
       setStep(3);
@@ -411,7 +411,7 @@ function BatchTab() {
         if (receipt.status === "reverted") throw new Error(`Send to ${shortenAddress(row.address)} reverted`);
 
         let paymentId = 0;
-        for (const log of receipt.logs) { try { const d = decodeEventLog({ abi: routerV2Abi, data: log.data, topics: log.topics as [signature: `0x${string}`, ...args: `0x${string}`[]] }); if (d.eventName === "PaymentCreated") { paymentId = Number((d.args as { paymentId: bigint }).paymentId); break; } } catch { /* expected */ } }
+        for (const log of receipt.logs) { try { const d = decodeEventLog({ abi: routerV2Abi, data: log.data, topics: log.topics as [signature: `0x${string}`, ...args: `0x${string}`[]] }); if (d.eventName === "PaymentCreated") { paymentId = Number((d.args as unknown as { paymentId: bigint }).paymentId); break; } } catch { /* expected */ } }
 
         setStep(3 + i * 2);
         await finalizeAsync(
