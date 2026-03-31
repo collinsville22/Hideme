@@ -182,7 +182,7 @@ export default function PortfolioPage() {
         try {
           const decoded = decodeEventLog({ abi: wrapperAbi, data: log.data, topics: log.topics as [signature: `0x${string}`, ...args: `0x${string}`[]] });
           if (decoded.eventName === "UnwrapRequested") {
-            requestId = Number((decoded.args as { requestId: bigint }).requestId);
+            requestId = Number((decoded.args as unknown as { requestId: bigint }).requestId);
             break;
           }
         } catch { /* expected */ }
