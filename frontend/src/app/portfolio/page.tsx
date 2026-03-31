@@ -5,6 +5,7 @@ import { useAccount, usePublicClient, useWriteContract, useWalletClient } from "
 import { decodeEventLog } from "viem";
 import { WRAPPER_FACTORY_ADDRESS, shortenAddress } from "@/lib/constants";
 import { decryptMultipleBalances } from "@/lib/fhevm";
+import { finalizeAsync } from "@/lib/relayer";
 import wrapperAbi from "@/lib/abi/ConfidentialWrapper.json";
 import factoryAbi from "@/lib/abi/WrapperFactory.json";
 
@@ -189,16 +190,12 @@ export default function PortfolioPage() {
 
       if (requestId === null) throw new Error("Could not extract unwrap requestId");
 
-      setWrapStatus("Unwrapping via relayer (KMS decryption ~30-60s)...");
-      const resp = await fetch("/api/unwrap/finalize", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ wrapperAddress: token.wrapper, requestId }),
-      });
-      const r = await resp.json();
-      if (!resp.ok && !r.alreadyDone) throw new Error(r.error || "Finalize failed");
+      const res = await finalizeAsync(
+        { type: "unwrap", wrapperAddress: token.wrapper, requestId },
+        (msg) => setWrapStatus(msg),
+      );
 
-      setWrapStatus("Unwrap complete!");
+      setWrapStatus(res.alreadyDone ? "Already finalized." : "Unwrap complete!");
       setTimeout(() => { setWrapping(null); setWrapStatus(null); scan(); }, 2000);
     } catch (err) { setError((err instanceof Error ? err.message : "Unwrap failed").slice(0, 200)); setWrapping(null); setWrapStatus(null); }
   };

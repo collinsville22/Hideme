@@ -11,7 +11,7 @@ const ZAMA_API_KEY = typeof window !== "undefined"
   : "";
 
 const USE_MINI_RELAYER =
-  process.env.NEXT_PUBLIC_USE_MINI_RELAYER === "true" || IS_MAINNET;
+  process.env.NEXT_PUBLIC_USE_MINI_RELAYER === "true";
 
 function loadSdkScript(): Promise<void> {
   if (sdkLoaded) return Promise.resolve();

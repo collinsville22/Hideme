@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/copy-sdk.js && next build",
+    "postinstall": "node scripts/copy-sdk.js",
     "start": "next start",
     "lint": "eslint"
   },

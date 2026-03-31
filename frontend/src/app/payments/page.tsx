@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { useAccount, useReadContract, useWriteContract, usePublicClient, useSendTransaction } from "wagmi";
 import { parseUnits, decodeEventLog, encodeFunctionData } from "viem";
 import { ROUTER_V2_ADDRESS, WRAPPER_FACTORY_ADDRESS, shortenAddress, getExplorerTxUrl } from "@/lib/constants";
+import { finalizeAsync } from "@/lib/relayer";
 import routerV2Abi from "@/lib/abi/ConfidentialPaymentRouterV2.json";
 import factoryAbi from "@/lib/abi/WrapperFactory.json";
 
@@ -264,10 +265,10 @@ function SendTab() {
       }
 
       setStep(3);
-      setStatus("Relayer delivering tokens to receiver...");
-      const fr = await fetch("/api/payments/finalize", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ paymentId: Number(paymentId) }) });
-      const res = await fr.json();
-      if (!fr.ok && !res.alreadyDone) throw new Error(res.error || "Finalize failed");
+      const res = await finalizeAsync(
+        { type: "payment", paymentId: Number(paymentId) },
+        (msg) => setStatus(msg),
+      );
 
       setStep(4);
       if (res.txHash) setTxHash(res.txHash);
@@ -412,10 +413,11 @@ function BatchTab() {
         let paymentId = 0;
         for (const log of receipt.logs) { try { const d = decodeEventLog({ abi: routerV2Abi, data: log.data, topics: log.topics as [signature: `0x${string}`, ...args: `0x${string}`[]] }); if (d.eventName === "PaymentCreated") { paymentId = Number((d.args as { paymentId: bigint }).paymentId); break; } } catch { /* expected */ } }
 
-        setStep(3 + i * 2); setStatus(`Delivering to ${shortenAddress(row.address)} (${i + 1}/${validRows.length})...`);
-        const resp = await fetch("/api/payments/finalize", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ paymentId }) });
-        const r = await resp.json();
-        if (!resp.ok && !r.alreadyDone) throw new Error(`Finalize failed: ${r.error}`);
+        setStep(3 + i * 2);
+        await finalizeAsync(
+          { type: "payment", paymentId },
+          (msg) => setStatus(`${shortenAddress(row.address)} (${i + 1}/${validRows.length}): ${msg}`),
+        );
       }
       setStep(totalSteps + 1); setStatus(null);
     } catch (err: unknown) { setError((err instanceof Error ? err.message : "Failed").slice(0, 300)); setStep(0); }
