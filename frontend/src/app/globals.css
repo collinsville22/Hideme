@@ -1,0 +1,200 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #09090b;
+  --color-foreground: #fafafa;
+  --color-surface: #111113;
+  --color-surface-2: #1c1c1f;
+  --color-surface-3: #27272a;
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-border-hover: rgba(255, 255, 255, 0.12);
+  --color-border-strong: rgba(255, 255, 255, 0.18);
+  --color-gold: #D4A843;
+  --color-gold-dim: #b8923a;
+  --color-gold-muted: rgba(212, 168, 67, 0.1);
+  --color-gold-glow: rgba(212, 168, 67, 0.06);
+  --color-success: #34d399;
+  --color-danger: #f87171;
+  --color-warning: #fbbf24;
+  --color-text-primary: #fafafa;
+  --color-text-secondary: #a1a1aa;
+  --color-text-tertiary: #71717a;
+  --color-text-ghost: #3f3f46;
+  --color-redacted: #27272a;
+  --font-display: var(--font-instrument);
+  --font-mono: var(--font-ibm-plex);
+  --font-sans: var(--font-ibm-plex);
+}
+
+* { border-color: var(--color-border); }
+
+html {
+  background: var(--color-background);
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-mono), 'IBM Plex Mono', ui-monospace, monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); }
+
+::selection {
+  background: var(--color-gold-muted);
+  color: var(--color-gold);
+}
+
+:focus-visible {
+  outline: 1px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* RainbowKit overrides */
+[data-rk] {
+  --rk-colors-accentColor: var(--color-gold) !important;
+}
+
+/* ═══════════════════════════ TYPOGRAPHY ═══════════════════════════ */
+
+.font-editorial {
+  font-family: var(--font-display), 'Instrument Serif', Georgia, serif;
+}
+
+/* ═══════════════════════════ ANIMATIONS ═══════════════════════════ */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes revealWidth {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes pulse-gold {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(212, 168, 67, 0.4); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(212, 168, 67, 0); }
+}
+
+@keyframes redact {
+  0% { background-size: 0% 100%; }
+  100% { background-size: 100% 100%; }
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -10%); }
+  30% { transform: translate(3%, -15%); }
+  50% { transform: translate(-10%, 5%); }
+  70% { transform: translate(8%, -5%); }
+  90% { transform: translate(-3%, 10%); }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease forwards;
+  opacity: 0;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pulse-gold {
+  animation: pulse-gold 2.5s ease-in-out infinite;
+}
+
+/* Film grain overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 8s steps(10) infinite;
+}
+
+/* ═══════════════════════════ FORM INPUTS ═══════════════════════════ */
+
+.input-field {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-bottom-width: 2px;
+  background: transparent;
+  color: var(--color-text-primary);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 13px;
+  transition: border-color 0.2s;
+}
+
+.input-field::placeholder {
+  color: var(--color-text-ghost);
+  font-style: italic;
+}
+
+.input-field:focus {
+  outline: none;
+  border-bottom-color: var(--color-gold);
+}
+
+/* ═══════════════════════════ REDACTED MOTIF ═══════════════════════════ */
+
+.redacted-bar {
+  display: inline-block;
+  background: var(--color-redacted);
+  height: 1.1em;
+  border-radius: 1px;
+  vertical-align: middle;
+}
+
+.redacted-line {
+  display: block;
+  background: var(--color-redacted);
+  height: 10px;
+  margin: 6px 0;
+  border-radius: 1px;
+}
+
+/* Horizontal rule accent */
+.rule-gold {
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-gold), transparent);
+  border: none;
+}
+
+/* ═══════════════════════════ STAGGER ═══════════════════════════ */
+.delay-0 { animation-delay: 0ms; }
+.delay-1 { animation-delay: 80ms; }
+.delay-2 { animation-delay: 160ms; }
+.delay-3 { animation-delay: 240ms; }
+.delay-4 { animation-delay: 320ms; }
+.delay-5 { animation-delay: 400ms; }

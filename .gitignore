@@ -1,0 +1,35 @@
+node_modules/
+.next/
+dist/
+artifacts/
+cache/
+types/
+typechain-types/
+coverage/
+*.env
+.env.local
+.env*.local
+fhevmTemp/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build
+*.tsbuildinfo
+
+# Deployment artifacts (large JSON)
+contracts/deployments/*/solcInputs/
+
+# Lock files (keep package-lock but ignore others)
+yarn.lock
+pnpm-lock.yaml
+
+# SDK WASM bundles (large, distributed separately)
+frontend/public/sdk/
