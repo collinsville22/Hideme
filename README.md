@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <a href="https://youtu.be/W1IftDv2HY4"><strong>Demo Video</strong></a> · <a href="https://etherscan.io/address/0x46E16F6E248dfa735D50345b1d2657C8dBC5d60B"><strong>Factory on Etherscan</strong></a> · <a href="#on-chain-evidence"><strong>Mainnet Proof</strong></a>
+  <a href="https://frontend-omega-flame-98.vercel.app"><strong>Live App</strong></a> · <a href="https://www.mintlify.com/collinsville22/Hideme"><strong>Documentation</strong></a> · <a href="https://youtu.be/W1IftDv2HY4"><strong>Demo Video</strong></a> · <a href="https://etherscan.io/address/0x46E16F6E248dfa735D50345b1d2657C8dBC5d60B"><strong>Factory on Etherscan</strong></a> · <a href="#on-chain-evidence"><strong>Mainnet Proof</strong></a>
 </p>
 
 ---
